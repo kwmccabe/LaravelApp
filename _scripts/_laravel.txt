@@ -1,0 +1,4 @@
+/var/www$ composer create-project --prefer-dist laravel/laravel .
+/var/www$ php artisan key:generate
+
+
