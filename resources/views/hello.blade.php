@@ -2,7 +2,8 @@
 see https://laravel.com/docs/10.x/blade
 --}}
 
-<br/>Hello, {{ $name }}.
-<br/>
-<br/>Route::current()->uri : {{ Route::current()->uri }}
-<br/>request()->route()->uri : {{ request()->route()->uri }}
+@extends('layout')
+
+@section('main')
+<h2>Hello {{ $name }}</h2>
+@endsection
