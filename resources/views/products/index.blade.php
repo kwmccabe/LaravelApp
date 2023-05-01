@@ -18,17 +18,7 @@
 
 <div class="row gx-2">
     {{-- date filter --}}
-    <div class="col-3 col-sm-auto pe-0 mt-1 small">
-        Dates: <input id="dt_checkbox" class="form-check-input" type="checkbox" role="switch">
-    </div>
-    <div class="col-3 col-sm-auto ps-1 mb-2 small">
-        <input id="dt_start" name="dt_start" class="form-control-sm" type="date" value="">
-    </div>
-    <div class="col-3 col-sm-auto mb-2 small">
-        <input id="dt_end" name="dt_end" class="form-control-sm" type="date" value="">
-    </div>
-    <div class="col-3 col-sm-auto mb-2">
-        <button id="dt_button" type="button" class="btn btn-sm btn-primary" role="button">Apply</button>
+    <div class="col mb-2">
     </div>
 
     <div class="col text-end mb-2 ms-auto">
@@ -37,7 +27,24 @@
 </div>
 <div class="row">
     {{-- list filter --}}
+    <div class="col-auto pe-0 mt-1 small">Filters :
+        <i class="bi bi-funnel"></i>
+    </div>
+    <div class="col-auto ps-1 mb-2 small">
+        <label for="status" class="visually-hidden">Product Status</label>
+        <select id="status" name="status" class="form-select form-select-sm" onchange="window.location='?status='+this.value;">
+            <option value="">Status - All</option>
+        @foreach ($CONF['products']['status_options'] as $key => $val)
+            <option value="{{ $key}}"{{
+                (session('products_index.status') == $key) ? ' selected' : ''
+                }}> Status - {{ $val }}</option>
+        @endforeach
+        </select>
+    </div>
+    {{-- pager --}}
+    <div class="col-auto text-center text-sm-end mt-1 ms-auto">
     {!! $products->links() !!}
+    </div>
 </div>
 
     </div> <!-- end class="card-header" -->
@@ -49,17 +56,6 @@
 <tr class="text-secondary">
     <th><input type="checkbox" class="checkall" onclick="checkAll('resource_id',this.checked);" /></th>
     <th><span class="text-nowrap">
-@if (session('products_index.sort') == 'id' && session('products_index.order') == 'asc')
-    <a href="{{ route('products.index',['order' => 'desc']) }}">ID</a>
-    <i class="bi bi-sort-down"></i>
-@elseif (session('products_index.sort') == 'id')
-    <a href="{{ route('products.index',['order' => 'asc']) }}">ID</a>
-    <i class="bi bi-sort-up"></i>
-@else
-    <a href="{{ route('products.index',['sort' => 'id']) }}">ID</a>
-@endif
-        </span></th>
-    <th><span class="text-nowrap">
 @if (session('products_index.sort') == 'status' && session('products_index.order') == 'asc')
     <a href="{{ route('products.index',['order' => 'desc']) }}">Status</a>
     <i class="bi bi-sort-down"></i>
@@ -68,6 +64,17 @@
     <i class="bi bi-sort-up"></i>
 @else
     <a href="{{ route('products.index',['sort' => 'status']) }}">Status</a>
+@endif
+        </span></th>
+    <th><span class="text-nowrap">
+@if (session('products_index.sort') == 'publish_date' && session('products_index.order') == 'asc')
+    <a href="{{ route('products.index',['order' => 'desc']) }}">Publish Date</a>
+    <i class="bi bi-sort-down"></i>
+@elseif (session('products_index.sort') == 'publish_date')
+    <a href="{{ route('products.index',['order' => 'asc']) }}">Publish Date</a>
+    <i class="bi bi-sort-up"></i>
+@else
+    <a href="{{ route('products.index',['sort' => 'publish_date']) }}">Publish Date</a>
 @endif
         </span></th>
     <th><span class="text-nowrap">
@@ -92,15 +99,8 @@
     <a href="{{ route('products.index',['sort' => 'title']) }}">Title</a>
 @endif
         </span></th>
-    <th><span class="text-nowrap">
-@if (session('products_index.sort') == 'publish_date' && session('products_index.order') == 'asc')
-    <a href="{{ route('products.index',['order' => 'desc']) }}">Publish Date</a>
-@elseif (session('products_index.sort') == 'publish_date')
-    <a href="{{ route('products.index',['order' => 'asc']) }}">Publish Date</a>
-@else
-    <a href="{{ route('products.index',['sort' => 'publish_date']) }}">Publish Date</a>
-@endif
-        </span></th>
+    <th><span class="text-nowrap">Subtitle</span></th>
+    <th><span class="text-nowrap">Description</span></th>
     <th></th>
 </tr>
 </thead>
@@ -117,10 +117,10 @@
     </td>
 
     <td onclick="window.location='{{ route('products.show',$product->id) }}';">
-        {{ $product->id }}
+        {{ $CONF['products']['status_options'][$product->status] }}
     </td>
     <td onclick="window.location='{{ route('products.show',$product->id) }}';">
-        {{ $CONF['products']['status_options'][$product->status] }}
+        {{ $product->publish_date }}
     </td>
     <td onclick="window.location='{{ route('products.show',$product->id) }}';">
         {{ $product->isbn }}
@@ -129,7 +129,10 @@
         {{ $product->title }}
     </td>
     <td onclick="window.location='{{ route('products.show',$product->id) }}';">
-        {{ $product->publish_date }}
+        {{ $product->subtitle }}
+    </td>
+    <td onclick="window.location='{{ route('products.show',$product->id) }}';">
+        {{ str_word_count($product->description) }} Words
     </td>
 
     <td>
@@ -157,7 +160,7 @@
     <div id="list-actions-apply" class="col-auto">
         <button type="submit" class="btn btn-sm btn-primary" role="button">Apply</button>
     </div>
-    <div class="col text-center text-sm-end mt-1 ms-auto">
+    <div class="col-auto text-center text-sm-end mt-1 ms-auto">
         {!! $products->links() !!}
     </div>
 </div>

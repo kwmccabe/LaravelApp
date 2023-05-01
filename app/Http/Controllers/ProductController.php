@@ -91,8 +91,8 @@ class ProductController extends Controller
             $newval = (in_array($request_data['order'], array_keys(config('constants.products.sortorder_options')))) ? $request_data['order'] : 'asc';
             $session_data['order'] = $request_data['order'];
         }
-        if (!empty($request_data['limit']) && int($request_data['limit'])) {
-            $session_data['limit'] = int($request_data['limit']);
+        if (!empty($request_data['limit']) && intval($request_data['limit'])) {
+            $session_data['limit'] = intval($request_data['limit']);
         }
         session(['products_index' => $session_data]);
 

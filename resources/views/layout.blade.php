@@ -19,7 +19,7 @@
 @section('header')
     <div id="header" class="container-fluid mt-2">
         <div class="card">
-            <div class="card-header bg-primary">NAVBAR</div>
+            <div class="card-header bg-primary"> @include('navbar_main') </div>
             <div class="card-body">
                 <div class="row">
 <div class="col-12 col-sm-8">
